@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 3000;
 // Scraper function that scrapes the blog and returns the post data
 async function scrapeBlog() {
     const browser = await puppeteer.launch({
-         executablePath: '/usr/bin/chromium',
+        executablePath: '/usr/bin/google-chrome',
         args: [
             '--no-sandbox',
             '--disable-setuid-sandbox',
