@@ -1,41 +1,48 @@
-# Use official Node.js LTS version as a base image
-FROM node:16-slim
+# Use the official Node.js image with a version that supports your app
+FROM node:18-slim
 
-# Install necessary dependencies for Puppeteer and Chrome
-RUN apt-get update \
-    && apt-get install -y \
-    apt-transport-https \
-    ca-certificates \
-    curl \
-    gnupg \
-    --no-install-recommends \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install Chromium and its dependencies
+# Install necessary packages for Puppeteer
 RUN apt-get update && apt-get install -y \
-    chromium \
+    ca-certificates \
     fonts-liberation \
-    --no-install-recommends \
-    && rm -rf /var/lib/apt/lists/*
+    libappindicator3-1 \
+    libasound2 \
+    libatk-bridge2.0-0 \
+    libatk1.0-0 \
+    libatspi2.0-0 \
+    libdrm2 \
+    libgbm-dev \
+    libgtk-3-0 \
+    libnspr4 \
+    libnss3 \
+    libx11-xcb1 \
+    libxcomposite1 \
+    libxdamage1 \
+    libxrandr2 \
+    xdg-utils \
+    wget \
+    --no-install-recommends && \
+    rm -rf /var/lib/apt/lists/*
 
-# Set environment variables for Puppeteer to use the installed Chromium
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
-    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
+# Install Google Chrome
+RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+    apt-get install -y ./google-chrome-stable_current_amd64.deb && \
+    rm google-chrome-stable_current_amd64.deb
 
-# Set working directory
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json
+# Copy package.json and package-lock.json into the working directory
 COPY package*.json ./
 
-# Install Node.js dependencies
+# Install npm dependencies
 RUN npm install
 
-# Copy the rest of the application code
+# Copy the rest of your application code into the working directory
 COPY . .
 
-# Expose port if the application is a web service
+# Expose the port the app will run on
 EXPOSE 3000
 
-# Run the application
+# Start the application
 CMD ["node", "index.js"]
