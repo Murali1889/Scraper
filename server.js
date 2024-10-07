@@ -5,10 +5,17 @@ const delay = (time) => new Promise((resolve) => setTimeout(resolve, time));
 
 (async (liAtCookieValue) => {
   const browser = await puppeteer.launch({
-    headless: true, // non-headless mode to see the browser actions
-    defaultViewport: null, // full-screen mode
-    args: ['--start-maximized'], // start browser maximized
-  });
+    executablePath: '/usr/bin/chromium',
+    args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-gpu',
+        '--disable-software-rasterizer',
+        '--no-zygote',
+    ]
+});
+
 
   const page = await browser.newPage();
 
