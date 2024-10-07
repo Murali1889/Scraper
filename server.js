@@ -33,7 +33,15 @@ const delay = (time) => new Promise((resolve) => setTimeout(resolve, time));
   await page.setCookie(cookie);
 
   // Navigate to the LinkedIn company posts URL
-  await page.goto('https://www.linkedin.com/company/teamsignzy/posts/?feedView=all', { waitUntil: 'networkidle2' });
+  try {
+  await page.goto('https://www.linkedin.com/company/teamsignzy/posts/?feedView=all', {
+    waitUntil: 'networkidle2',
+    timeout: 60000 // 60 seconds timeout
+  });
+} catch (error) {
+  console.error("Page load timeout:", error);
+  // You can retry here or handle the failure gracefully.
+}
 
   // Wait for the parent div that contains the button to appear using unique class names
   const parentSelector = 'div.sort-dropdown__dropdown.artdeco-dropdown';
