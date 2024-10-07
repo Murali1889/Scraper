@@ -1,7 +1,7 @@
 # Use the official Node.js image with a version that supports your app
 FROM node:18-slim
 
-# Install necessary packages for Puppeteer
+# Install necessary dependencies for Puppeteer and Chromium
 RUN apt-get update && apt-get install -y \
     ca-certificates \
     fonts-liberation \
@@ -21,13 +21,9 @@ RUN apt-get update && apt-get install -y \
     libxrandr2 \
     xdg-utils \
     wget \
+    chromium \
     --no-install-recommends && \
     rm -rf /var/lib/apt/lists/*
-
-# Install Google Chrome
-RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
-    apt-get install -y ./google-chrome-stable_current_amd64.deb && \
-    rm google-chrome-stable_current_amd64.deb
 
 # Set the working directory inside the container
 WORKDIR /app
