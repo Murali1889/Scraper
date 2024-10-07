@@ -25,7 +25,7 @@ async function scrapeBlog() {
 
         // Navigate to the blog page
         console.log("Navigating to the blog page...");
-        await page.goto('https://www.signzy.com/blog/', { waitUntil: 'networkidle2' });
+        await page.goto('https://www.signzy.com/blog/', { waitUntil: 'networkidle2', timeout:60000 });
         console.log("Page loaded!");
 
         // Wait for articles to be loaded
@@ -133,7 +133,7 @@ async function scrapeLinkedInPosts(companyUrl, liAtCookieValue) {
 
         // Navigate to the LinkedIn company posts URL
         console.log("Navigating to LinkedIn company page...");
-        await page.goto(companyUrl, { waitUntil: 'networkidle2' });
+        await page.goto(companyUrl, { waitUntil: 'networkidle2', timeout: 60000 });
 
         // Adding delay to ensure page is loaded
         await delay(2000);
