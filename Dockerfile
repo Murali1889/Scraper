@@ -1,13 +1,11 @@
 # Use an official Node.js runtime as a parent image
 FROM node:18-slim
 
-# Install Chromium dependencies and Puppeteer necessary packages
+# Install Chromium dependencies and other necessary packages
 RUN apt-get update && apt-get install -y \
     wget \
-    curl \
     gnupg \
-    --no-install-recommends && \
-    apt-get install -y \
+    curl \
     ca-certificates \
     fonts-liberation \
     libappindicator3-1 \
@@ -28,6 +26,7 @@ RUN apt-get update && apt-get install -y \
     xdg-utils \
     libu2f-udev \
     xvfb \
+    chromium \
     && apt-get clean
 
 # Set up working directory
@@ -39,8 +38,8 @@ COPY package*.json ./
 # Install Node dependencies
 RUN npm install
 
-# Install Puppeteer
-RUN npm install puppeteer
+# Install Puppeteer without downloading Chromium (as we're using the system-installed version)
+RUN npm install puppeteer --ignore-scripts --no-bin-links
 
 # Expose port 3000
 EXPOSE 3000
@@ -48,5 +47,8 @@ EXPOSE 3000
 # Copy the rest of the application files
 COPY . .
 
+# Set the environment variable to point Puppeteer to the correct Chromium binary
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
+
 # Command to start the app
-CMD ["node", "index.js"]
+CMD ["node", "server.js"]
