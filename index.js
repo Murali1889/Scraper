@@ -4,7 +4,20 @@ require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
+function getRandomUserAgent() {
+    const userAgents = [
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36',
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.1 Safari/605.1.15',
+        'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:82.0) Gecko/20100101 Firefox/82.0',
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0',
+        'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36',
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36'
+        // Add more user agents as needed
+    ];
+    
+    const randomIndex = Math.floor(Math.random() * userAgents.length);
+    return userAgents[randomIndex];
+}
 // Scraper function that scrapes the blog and returns the post data
 async function scrapeBlog() {
     let browser;
@@ -22,6 +35,8 @@ async function scrapeBlog() {
         });
 
         const page = await browser.newPage();
+        const userAgent = getRandomUserAgent();
+        await page.setUserAgent(userAgent);
 
         // Navigate to the blog page
         console.log("Navigating to the blog page...");
@@ -117,6 +132,8 @@ async function scrapeLinkedInPosts(companyUrl, liAtCookieValue) {
             ]
         });
         const page = await browser.newPage();
+        const userAgent = getRandomUserAgent();
+        await page.setUserAgent(userAgent);
 
         // Set LinkedIn li_at cookie to authenticate the session
         const cookie = {
